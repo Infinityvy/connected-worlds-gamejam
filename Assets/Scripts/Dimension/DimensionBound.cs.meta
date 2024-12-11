@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: a54e0d46a8b78114f81a4a9636bbf8ed
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - meshRenderer: {instanceID: 0}
+  - wrongDimMat: {fileID: 2100000, guid: 79534a751aa5ee948a5db0fb9c477916, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
