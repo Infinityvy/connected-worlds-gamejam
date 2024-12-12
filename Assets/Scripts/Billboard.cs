@@ -4,8 +4,6 @@ public class Billboard : MonoBehaviour
 {
     private Transform camTransform;
 
-    private Quaternion rotAdjustment = Quaternion.Euler(0, 180.0f, 0);
-
     private void Start()
     {
         camTransform = PlayerCamera.Instance.cam.transform;
@@ -15,6 +13,6 @@ public class Billboard : MonoBehaviour
     {
         transform.LookAt(camTransform);
 
-        transform.rotation = rotAdjustment * transform.rotation;
+        transform.eulerAngles = new Vector3(-transform.eulerAngles.x, transform.eulerAngles.y + 180f, transform.eulerAngles.z);
     }
 }

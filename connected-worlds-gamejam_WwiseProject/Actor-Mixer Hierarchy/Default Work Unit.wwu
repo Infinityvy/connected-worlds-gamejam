@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{3F9D1803-C50B-4EBC-8F59-6B31011562B2}" SchemaVersion="123">
+	<AudioObjects>
+		<WorkUnit Name="Default Work Unit" ID="{3F9D1803-C50B-4EBC-8F59-6B31011562B2}" PersistMode="Standalone">
+			<ChildrenList>
+				<Sound Name="ah" ID="{2F2A0966-A4A8-4CCF-ADAC-D57262BD826B}" ShortID="946830100">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CAEFD241-F510-467D-8467-6348B780BEB7}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{93F2B54D-7378-45BE-94A9-51C3D8433831}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="ah" ID="{51D3BAF2-F8D6-42A4-AE2D-A388A39EFE85}">
+							<Language>SFX</Language>
+							<AudioFile>ah.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="249113686"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="ah" ID="{51D3BAF2-F8D6-42A4-AE2D-A388A39EFE85}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="coin1" ID="{AF3708A0-EA4C-4B23-B590-368777DAF29A}" ShortID="331098475">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CAEFD241-F510-467D-8467-6348B780BEB7}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{93F2B54D-7378-45BE-94A9-51C3D8433831}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="coin1" ID="{F481B4B8-5609-4ADF-9DF1-1B6FF9E82D71}">
+							<Language>SFX</Language>
+							<AudioFile>coin1.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="283076394"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="coin1" ID="{F481B4B8-5609-4ADF-9DF1-1B6FF9E82D71}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="coin2" ID="{159F6AA3-9F2A-4F98-894C-D64FB60FE2DF}" ShortID="76308905">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CAEFD241-F510-467D-8467-6348B780BEB7}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{93F2B54D-7378-45BE-94A9-51C3D8433831}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="coin2" ID="{54D793D5-C9E2-4F81-8E0B-18F4A611E91C}">
+							<Language>SFX</Language>
+							<AudioFile>coin2.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="986153863"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="coin2" ID="{54D793D5-C9E2-4F81-8E0B-18F4A611E91C}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="coin3" ID="{75CF8109-22F9-4841-AD6A-43071A2AB4AC}" ShortID="279811360">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CAEFD241-F510-467D-8467-6348B780BEB7}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{93F2B54D-7378-45BE-94A9-51C3D8433831}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="coin3" ID="{D788C98C-4FE5-44AC-B01C-3BC8EC1DD565}">
+							<Language>SFX</Language>
+							<AudioFile>coin3.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="507932870"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="coin3" ID="{D788C98C-4FE5-44AC-B01C-3BC8EC1DD565}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="coin4" ID="{70AC6FA7-924C-4384-851D-0BC9A1DC2E87}" ShortID="1041669553">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CAEFD241-F510-467D-8467-6348B780BEB7}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{93F2B54D-7378-45BE-94A9-51C3D8433831}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="coin4" ID="{42E3A210-F330-495E-B3B5-77E329370E87}">
+							<Language>SFX</Language>
+							<AudioFile>coin4.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="515232890"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="coin4" ID="{42E3A210-F330-495E-B3B5-77E329370E87}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="coin5" ID="{29E78784-628F-4016-ABD1-BDE63637DEEE}" ShortID="197603315">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CAEFD241-F510-467D-8467-6348B780BEB7}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{93F2B54D-7378-45BE-94A9-51C3D8433831}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="coin5" ID="{1E295C17-982F-4A55-8736-BB273FB98DF7}">
+							<Language>SFX</Language>
+							<AudioFile>coin5.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="124583335"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="coin5" ID="{1E295C17-982F-4A55-8736-BB273FB98DF7}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="pock" ID="{CD621747-10A5-4CF8-B0D4-DA4A2B239A0F}" ShortID="502692919">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CAEFD241-F510-467D-8467-6348B780BEB7}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{93F2B54D-7378-45BE-94A9-51C3D8433831}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="pock" ID="{098D0915-7E58-4C0C-9F75-4DB5E30CD052}">
+							<Language>SFX</Language>
+							<AudioFile>pock.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="154918791"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="pock" ID="{098D0915-7E58-4C0C-9F75-4DB5E30CD052}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="schreie" ID="{70A7F478-E7E8-45E8-AE83-FFB29F623CB6}" ShortID="722064602">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CAEFD241-F510-467D-8467-6348B780BEB7}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{93F2B54D-7378-45BE-94A9-51C3D8433831}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="schreie" ID="{85997CF0-9CB7-46D9-972C-9DD0C18ADEDC}">
+							<Language>SFX</Language>
+							<AudioFile>schreie.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="955458993"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="schreie" ID="{85997CF0-9CB7-46D9-972C-9DD0C18ADEDC}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="smack" ID="{129CC19D-C1EB-4007-86CB-1E1E1BAE1AFE}" ShortID="408377608">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CAEFD241-F510-467D-8467-6348B780BEB7}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{93F2B54D-7378-45BE-94A9-51C3D8433831}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="smack" ID="{F290BBF7-8872-495F-ACF0-A4F0DF6C485C}">
+							<PropertyList>
+								<Property Name="FadeInDuration" Type="Real64" Value="0.00579119985148912"/>
+								<Property Name="LoopBegin" Type="Real64" Value="0"/>
+								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+							</PropertyList>
+							<Language>SFX</Language>
+							<AudioFile>smack.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="792773513"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="smack" ID="{F290BBF7-8872-495F-ACF0-A4F0DF6C485C}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="swoosh" ID="{95BB9DF2-6A17-4A74-A035-C102340DF63C}" ShortID="547182234">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CAEFD241-F510-467D-8467-6348B780BEB7}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{93F2B54D-7378-45BE-94A9-51C3D8433831}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="swoosh" ID="{2EE5F39F-3204-4973-BCD9-B82D30F29BE1}">
+							<Language>SFX</Language>
+							<AudioFile>swoosh.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="726433344"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="swoosh" ID="{2EE5F39F-3204-4973-BCD9-B82D30F29BE1}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+			</ChildrenList>
+		</WorkUnit>
+	</AudioObjects>
+</WwiseDocument>

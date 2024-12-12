@@ -2,6 +2,11 @@ using UnityEngine;
 
 public class EnemyEntity : Entity
 {
+    [SerializeField]
+    private Transform deathEffectPrefab;
+
+    private bool dead = false;
+
     private void Start()
     {
         currentHealth = maxHealth;
@@ -9,6 +14,8 @@ public class EnemyEntity : Entity
 
     public override bool DealDamage(float damage)
     {
+        if (dead) return false;
+
         currentHealth -= damage;
         if (currentHealth < 0) Die();
         return true;
@@ -21,6 +28,10 @@ public class EnemyEntity : Entity
 
     protected override void Die()
     {
-        Debug.Log("I DIED! :(");
+        dead = true;
+
+        Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+
+        Destroy(gameObject);
     }
 }

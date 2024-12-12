@@ -1,0 +1,6 @@
+Event	ID	Name			Wwise Object Path	Notes
+	1081563617	Pow			\Default Work Unit\Pow	
+
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	792773513	smack	E:\Games\Unity Projects\connected-worlds-gamejam\connected-worlds-gamejam_WwiseProject\.cache\81\{81A954FF-0049-759D-C8FD-B873322EC1C5}.wem		\Actor-Mixer Hierarchy\Default Work Unit\smack		106884
+

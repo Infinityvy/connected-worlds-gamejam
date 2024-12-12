@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    [SerializeField]
+    private MeshRenderer meshRenderer;
+
+    [SerializeField]
+    private ParticleSystem destroyParticles;
+
     private Vector3 lastPosition;
     private LayerMask layerMask;
 
@@ -50,12 +56,15 @@ public class Bullet : MonoBehaviour
         }
         else
         {
+            transform.position = hits[0].point;
+
             Entity entity;
             bool isEntity = hits[0].transform.TryGetComponent<Entity>(out entity);
 
             if (isEntity)
             {
                 entity.DealDamage(damage);
+                meshRenderer.enabled = false;
             }
 
             Destroy();
@@ -66,6 +75,6 @@ public class Bullet : MonoBehaviour
     {
         destroyed = true;
 
-        GameObject.Destroy(gameObject);
+        destroyParticles.Play();
     }
 }

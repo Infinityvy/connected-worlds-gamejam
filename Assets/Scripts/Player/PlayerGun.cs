@@ -15,6 +15,9 @@ public class PlayerGun : MonoBehaviour
     [SerializeField]
     private ParticleSystem smoke;
 
+    [SerializeField]
+    private AudioSource shotSound;
+
     private PlayerInputActions playerInput;
 
     private InputAction fireAction;
@@ -63,6 +66,7 @@ public class PlayerGun : MonoBehaviour
 
         timeWhenLastFired = Time.time;
         smoke.Play();
+        shotSound.PlaySound("shotgun-shot");
 
         transform.localRotation = Quaternion.Euler(330.0f, 0, 0);
 

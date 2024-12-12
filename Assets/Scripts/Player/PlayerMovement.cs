@@ -23,16 +23,24 @@ public class PlayerMovement : MonoBehaviour
     private float maxSpeed = 12.0f;
 
     private InputAction jumpAction;
-    private float jumpForce = 6.5f;
-    private float jumpCooldown = 0.1f;
+    private float jumpForce = 10f;
+    private float jumpCooldown = 0.15f;
     private float timeWhenLastJumped = 0f;
     private float timeWhenLastGrounded = 0f;
+    private float timeWhenLastAirborned= 0f;
+    private float maxWallJumps = 2;
+    private float wallJumps;
 
     private InputAction dashAction;
     private float dashForce = 64.0f;
     private float dashDuration = 0.18f;
     private float dashCooldown = 0.6f;
     private float timeWhenLastDashed = 0f;
+
+    public bool isColliding = false;
+
+    [SerializeField]
+    private AudioSource audioSource;
 
     private void Awake()
     {
@@ -46,6 +54,8 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         playerRigid = GetComponent<Rigidbody>();
+
+        wallJumps = maxWallJumps;
     }
 
     private void Update()
@@ -53,12 +63,11 @@ public class PlayerMovement : MonoBehaviour
         setIfGrounded();
 
         Move();
-        Jump();
     }
 
     private void Move()
     {
-        Vector3 direction = moveAction.ReadValue<Vector2>().convertTo3DMovement();
+        Vector3 direction = moveAction.ReadValue<Vector2>().ConvertTo3DMovement();
 
         Vector3 forceVector = PlayerCamera.Instance.GetHorizontalRotation() * direction.normalized * Time.deltaTime;
 
@@ -77,17 +86,35 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void Jump()
+    private void Jump(InputAction.CallbackContext context)
     {
-        if (!jumpAction.IsPressed()) return;
+        //if (!jumpAction.IsPressed()) return;
 
         if (isGrounded
-            && Time.time - timeWhenLastJumped > jumpCooldown
-            && Time.time - timeWhenLastGrounded > 0.01f)
+            || Time.time - timeWhenLastAirborned < jumpCooldown)
         {
-            timeWhenLastJumped = Time.time;
-            playerRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            if (Time.time - timeWhenLastJumped > jumpCooldown
+                && Time.time - timeWhenLastGrounded > 0.01f)
+            {
+                ApplyJump();
+            }
         }
+        else if(isColliding)
+        {
+            if(wallJumps > 0 && Time.time - timeWhenLastJumped > jumpCooldown)
+            {
+                wallJumps--;
+                ApplyJump();
+            }
+        }
+    }
+
+    private void ApplyJump()
+    {
+        audioSource.PlaySound("jump", 0.15f, 0.8f);
+        timeWhenLastJumped = Time.time;
+        playerRigid.linearVelocity = new Vector3(playerRigid.linearVelocity.x, 0, playerRigid.linearVelocity.z);
+        playerRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
     private void Dash(InputAction.CallbackContext context)
@@ -96,7 +123,9 @@ public class PlayerMovement : MonoBehaviour
 
         timeWhenLastDashed = Time.time;
 
-        Vector3 direction = moveAction.ReadValue<Vector2>().convertTo3DMovement().normalized;
+        audioSource.PlaySound("dash", 0.4f, 1.2f);
+
+        Vector3 direction = moveAction.ReadValue<Vector2>().ConvertTo3DMovement().normalized;
 
         Quaternion horizontalRot = PlayerCamera.Instance.GetHorizontalRotation();
 
@@ -127,9 +156,15 @@ public class PlayerMovement : MonoBehaviour
 
         if(!isGrounded && currentIsGrounded)
         {
+            // code executed on landing
             timeWhenLastGrounded = Time.time;
 
-            // code executed on landing
+            wallJumps = maxWallJumps;
+        }
+        else if(isGrounded && !currentIsGrounded)
+        {
+            // code executed when leaving ground
+            timeWhenLastAirborned = Time.time;
         }
 
         isGrounded = currentIsGrounded;
@@ -147,6 +182,7 @@ public class PlayerMovement : MonoBehaviour
 
         jumpAction = playerInput.Player.Jump;
         jumpAction.Enable();
+        jumpAction.performed += Jump;
 
         dashAction = playerInput.Player.Dash;
         dashAction.Enable();
@@ -158,5 +194,15 @@ public class PlayerMovement : MonoBehaviour
         moveAction.Disable();
         jumpAction.Disable();
         dashAction.Disable();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        isColliding = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        isColliding = false;
     }
 }
