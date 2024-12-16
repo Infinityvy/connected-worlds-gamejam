@@ -5,6 +5,8 @@ public class PlayerMovement : MonoBehaviour
 {
     public static PlayerMovement Instance;
 
+    private PlayerEntity playerEntity;
+
     public bool isGrounded { get; private set; } = false;
 
     [SerializeField]
@@ -19,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
 
     private InputAction moveAction;
     private float acceleration = 1000f;
-    private float deceleration = 350f;
+    private float deceleration = 400f;
     private float maxSpeed = 12.0f;
 
     private InputAction jumpAction;
@@ -31,16 +33,22 @@ public class PlayerMovement : MonoBehaviour
     private float maxWallJumps = 2;
     private float wallJumps;
 
+    private float gravityStrength = 9.81f;
+    private float gravityFactor = 1f;
+
     private InputAction dashAction;
     private float dashForce = 64.0f;
     private float dashDuration = 0.18f;
     private float dashCooldown = 0.6f;
     private float timeWhenLastDashed = 0f;
 
-    public bool isColliding = false;
+    private bool isColliding = false;
 
     [SerializeField]
-    private AudioSource audioSource;
+    private AudioSource audioSourcePrimary;
+
+    [SerializeField]
+    private AudioSource audioSourceSecondary;
 
     private void Awake()
     {
@@ -56,13 +64,26 @@ public class PlayerMovement : MonoBehaviour
         playerRigid = GetComponent<Rigidbody>();
 
         wallJumps = maxWallJumps;
+
+        playerEntity = PlayerEntity.Instance;
+    }
+
+    private void FixedUpdate()
+    {
+        if(playerEntity.isFrozen) return;
+
+        ApplyGravity();
     }
 
     private void Update()
     {
-        setIfGrounded();
+        if(playerEntity.isFrozen) return;
+
+        SetIfGrounded();
 
         Move();
+
+        WallSlide();
     }
 
     private void Move()
@@ -88,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump(InputAction.CallbackContext context)
     {
-        //if (!jumpAction.IsPressed()) return;
+        if(playerEntity.isFrozen) return;
 
         if (isGrounded
             || Time.time - timeWhenLastAirborned < jumpCooldown)
@@ -111,7 +132,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void ApplyJump()
     {
-        audioSource.PlaySound("jump", 0.15f, 0.8f);
+        audioSourcePrimary.PlaySound("jump", 0.15f, 0.8f);
         timeWhenLastJumped = Time.time;
         playerRigid.linearVelocity = new Vector3(playerRigid.linearVelocity.x, 0, playerRigid.linearVelocity.z);
         playerRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -123,7 +144,7 @@ public class PlayerMovement : MonoBehaviour
 
         timeWhenLastDashed = Time.time;
 
-        audioSource.PlaySound("dash", 0.4f, 1.2f);
+        audioSourcePrimary.PlaySound("dash", 0.4f, 1.2f);
 
         Vector3 direction = moveAction.ReadValue<Vector2>().ConvertTo3DMovement().normalized;
 
@@ -148,7 +169,12 @@ public class PlayerMovement : MonoBehaviour
         playerRigid.linearVelocity = new Vector3(horizontalVelocity.x, playerRigid.linearVelocity.y, horizontalVelocity.z);
     }
 
-    private void setIfGrounded()
+    private void ApplyGravity()
+    {
+        playerRigid.AddForce(gravityStrength * Vector3.down * gravityFactor, ForceMode.Acceleration);
+    }
+
+    private void SetIfGrounded()
     {
         LayerMask currentGroundMask = (DimensionChanger.Instance.currentDimension == Dimension.Blue ? layerMaskGroundBlue : layerMaskGroundRed);
 
@@ -170,9 +196,28 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = currentIsGrounded;
     }
 
-    public Vector3 getVelocity()
+    public Vector3 GetVelocity()
     {
         return playerRigid.linearVelocity;
+    }
+
+    public void SetIsColliding(bool state)
+    {
+        isColliding = state;
+    }
+
+    private void WallSlide()
+    {
+        if (isColliding && !isGrounded && playerRigid.linearVelocity.y < 0)
+        {
+            audioSourceSecondary.PlaySoundIfReady("sliding-looped");
+            gravityFactor = 0.5f;
+        }
+        else
+        {
+            audioSourceSecondary.Stop();
+            gravityFactor = 1;
+        }
     }
 
     private void OnEnable()
@@ -194,15 +239,5 @@ public class PlayerMovement : MonoBehaviour
         moveAction.Disable();
         jumpAction.Disable();
         dashAction.Disable();
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        isColliding = true;
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        isColliding = false;
     }
 }

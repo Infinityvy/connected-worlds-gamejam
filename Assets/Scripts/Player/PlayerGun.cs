@@ -5,6 +5,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerGun : MonoBehaviour
 {
+    public static PlayerGun Instance { get; private set; }
+
+    private PlayerEntity playerEntity;
+
     [SerializeField]
     private Transform bulletPrefab;
 
@@ -35,8 +39,13 @@ public class PlayerGun : MonoBehaviour
 
     private PlayerMovement playerMovement;
 
+    private LayerMask layerMaskBlue;
+    private LayerMask layerMaskRed;
+
     private void Awake()
     {
+        Instance = this;
+
         playerInput = GameSession.Instance.playerInput;
 
         if (playerInput == null) throw new System.Exception("playerInput was null");
@@ -47,10 +56,17 @@ public class PlayerGun : MonoBehaviour
         defaultPosition = transform.localPosition;
 
         playerMovement = PlayerMovement.Instance;
+
+        layerMaskBlue = LayerMask.GetMask("EnemyBlue", "GroundBlue", "WallBlue", "UniversalGround");
+        layerMaskRed = LayerMask.GetMask("EnemyRed", "GroundRed", "WallRed", "UniversalGround");
+
+        playerEntity = PlayerEntity.Instance;
     }
 
     private void Update()
     {
+        if(playerEntity.isFrozen) return;
+
         AnimateSway();
         RecoverRecoil();
 
@@ -62,11 +78,13 @@ public class PlayerGun : MonoBehaviour
 
     private void Fire(InputAction.CallbackContext context)
     {
+        if(playerEntity.isFrozen) return;
+
         if (Time.time - timeWhenLastFired < fireCooldown) return;
 
         timeWhenLastFired = Time.time;
         smoke.Play();
-        shotSound.PlaySound("shotgun-shot");
+        shotSound.PlaySound("shotgun-shot", 0.3f);
 
         transform.localRotation = Quaternion.Euler(330.0f, 0, 0);
 
@@ -78,15 +96,15 @@ public class PlayerGun : MonoBehaviour
 
         if(currentDim == Dimension.Blue)
         {
-            layerMask = LayerMask.GetMask("EnemyBlue", "GroundBlue", "WallBlue", "UniversalGround");
+            layerMask = layerMaskBlue;
         }
         else
         {
-            layerMask = LayerMask.GetMask("EnemyRed", "GroundRed", "WallRed", "UniversalGround");
+            layerMask = layerMaskRed;
         }
 
         Quaternion camRotation = PlayerCamera.Instance.GetRotation();
-        Vector3 bulletSpawnPos = PlayerCamera.Instance.transform.position;
+        Vector3 bulletSpawnPos = PlayerCamera.Instance.transform.position + PlayerCamera.Instance.transform.forward;
 
         for (int i = 0; i < bulletCount; i++)
         {
@@ -104,7 +122,7 @@ public class PlayerGun : MonoBehaviour
 
     private void AnimateSway()
     {
-        Vector3 newLocalPos = defaultPosition - Quaternion.Inverse(PlayerCamera.Instance.GetRotation()) * playerMovement.getVelocity() * swayStrength;
+        Vector3 newLocalPos = defaultPosition - Quaternion.Inverse(PlayerCamera.Instance.GetRotation()) * playerMovement.GetVelocity() * swayStrength;
 
         Vector3 difference = newLocalPos - transform.localPosition;
 

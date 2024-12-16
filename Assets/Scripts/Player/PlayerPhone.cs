@@ -22,7 +22,7 @@ public class PlayerPhone : MonoBehaviour
 
     private void AnimateSway()
     {
-        Vector3 newLocalPos = defaultPosition - Quaternion.Inverse(PlayerCamera.Instance.GetRotation()) * playerMovement.getVelocity() * swayStrength;
+        Vector3 newLocalPos = defaultPosition - Quaternion.Inverse(PlayerCamera.Instance.GetRotation()) * playerMovement.GetVelocity() * swayStrength;
 
         Vector3 difference = newLocalPos - transform.localPosition;
 

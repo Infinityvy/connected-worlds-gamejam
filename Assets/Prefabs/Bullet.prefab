@@ -62,8 +62,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a54e0d46a8b78114f81a4a9636bbf8ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boundDimension: 0
+  boundDimension: 1
+  type: 0
   meshRenderer: {fileID: 6505058508467862857}
+  dimMat: {fileID: 2100000, guid: ab5826e7aa8bc0140b3e7b739123424a, type: 2}
   wrongDimMat: {fileID: 2100000, guid: 304b35c1935e37748afa7d5d2ac1e7af, type: 2}
 --- !u!198 &9170023798972430782
 ParticleSystem:

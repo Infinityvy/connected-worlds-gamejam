@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 
 public class WorldGenerator : MonoBehaviour
@@ -6,9 +8,19 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField]
     private Transform worldBlockPrefab;
 
-    private const int worldSize = 9;
-    private int blockScale = 5;
+    [SerializeField]
+    private NavMeshSurface navMeshSurface;
+
+    [SerializeField]
+    private Transform[] enemyPrefabs;
+
+    [SerializeField]
+    private EnemyDirector enemyDirector;
+
+    public const int worldSize = 9;
+    public const int blockScale = 5;
     private WorldBlock[,] worldBlocks;
+    public WorldMap currentMap { get; private set; }
 
     private List<WorldMap> worldMapList;
 
@@ -20,7 +32,7 @@ public class WorldGenerator : MonoBehaviour
         {
             for (int z = 0; z < worldSize; z++)
             {
-                worldBlocks[x, z] = Instantiate(worldBlockPrefab, new Vector3(x, 0, z) * blockScale + new Vector3(blockScale * 0.5f, 0, blockScale * 0.5f), Quaternion.identity).GetComponent<WorldBlock>();
+                worldBlocks[x, z] = Instantiate(worldBlockPrefab, new Vector3(x, 0, z) * blockScale + new Vector3(blockScale * 0.5f, 0, blockScale * 0.5f), Quaternion.identity, transform).GetComponent<WorldBlock>();
             }
         }
 
@@ -30,11 +42,13 @@ public class WorldGenerator : MonoBehaviour
         worldMapList.Add(GenerateMap3());
         worldMapList.Add(GenerateMap4());
 
-        LoadRandomMap();
+        LoadNextMap();
     }
 
     public void LoadMap(WorldMap worldMap)
     {
+        currentMap = worldMap;
+
         float[,] map = worldMap.getMap();
 
         for(int x = 0; x < worldSize; x++)
@@ -48,7 +62,17 @@ public class WorldGenerator : MonoBehaviour
 
     public void LoadRandomMap()
     {
-        LoadMap(worldMapList[Random.Range(0, worldMapList.Count)]);
+        WorldMap newMap = worldMapList[Random.Range(0, worldMapList.Count)];
+
+        if (currentMap != null)
+        {
+            while (newMap == currentMap)
+            {
+                newMap = worldMapList[Random.Range(0, worldMapList.Count)];
+            }
+        }
+
+        LoadMap(newMap);
     }
 
     public bool WorldIsDormant()
@@ -64,22 +88,42 @@ public class WorldGenerator : MonoBehaviour
         return true;
     }
 
+    private IEnumerator WaitForMapLoad()
+    {
+        while(!WorldIsDormant())
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        navMeshSurface.RemoveData();
+        navMeshSurface.BuildNavMesh();
+
+        enemyDirector.SpawnWave();
+    }
+
+    public void LoadNextMap()
+    {
+        LoadRandomMap();
+
+        StartCoroutine(nameof(WaitForMapLoad));
+    }
+
     private WorldMap GenerateMap1()
     {
         float[,] map = new float[worldSize, worldSize]
             {
-            {10, 10, 10, 10, 10, 10, 10, 10, 10 },
-            {10, 10, 10, 10, 10, 10, 10, 10, 10 },
-            {40, 10, 10, 10, 30, 10, 10, 10, 40 },
-            {10, 30, 10, 10, 20, 10, 10, 30, 10 },
-            {15, 15, 20, 10, 20, 10, 20, 15, 15 },
-            {10, 30, 10, 10, 20, 10, 10, 30, 10 },
-            {40, 10, 10, 10, 20, 10, 10, 10, 40 },
-            {10, 10, 10, 30, 10, 30, 10, 10, 10 },
-            {10, 10, 10, 10, 10, 10, 10, 10, 10 },
+            {50, 50, 50, 50, 50, 50, 50, 50, 50 },
+            {50, 50, 50, 50, 60, 60, 50, 50, 50 },
+            {40, 40, 20, 20, 20, 20, 20, 20, 45 },
+            {30, 30, 30, 30, 30, 30, 30, 30, 40 },
+            {30, 30, 30, 30, 30, 30, 30, 30, 35 },
+            {30, 20, 20, 20, 40, 10, 10, 30, 30 },
+            {30, 10, 10, 20, 50, 10, 10, 10, 25 },
+            {30, 20, 10, 30, 60, 80, 80, 15, 20 },
+            {30, 30, 30, 30, 70, 80, 80, 15, 15 },
         };
 
-        WorldMap worldMap = new WorldMap("Central Platform", map);
+        WorldMap worldMap = new WorldMap("Elevated Side", map);
 
         return worldMap;
     }
@@ -88,18 +132,18 @@ public class WorldGenerator : MonoBehaviour
     {
         float[,] map = new float[worldSize, worldSize]
         {
-            { 10, 10, 10, 10, 10, 10, 10, 10, 10 },
-            { 10, 70, 70, 10, 10, 10, 70, 70, 10 },
-            { 10, 70, 10, 10, 30, 10, 10, 70, 10 },
-            { 10, 10, 10, 40, 50, 40, 10, 10, 10 },
-            { 10, 10, 30, 50, 60, 50, 30, 10, 10 },
-            { 10, 10, 10, 40, 50, 40, 10, 10, 10 },
-            { 10, 70, 10, 10, 30, 10, 10, 70, 10 },
-            { 10, 70, 70, 10, 10, 10, 70, 70, 10 },
-            { 10, 10, 10, 10, 10, 10, 10, 10, 10 },
+            { 40, 40, 10, 10, 10, 10, 10, 40, 40 },
+            { 40, 30, 20, 10, 10, 10, 20, 30, 40 },
+            { 10, 20, 10, 10, 20, 10, 10, 20, 10 },
+            { 10, 10, 10, 20, 30, 20, 10, 10, 10 },
+            { 10, 10, 20, 30, 40, 30, 20, 10, 10 },
+            { 10, 10, 10, 20, 30, 20, 10, 10, 10 },
+            { 10, 20, 10, 10, 20, 10, 10, 20, 10 },
+            { 40, 30, 20, 10, 10, 10, 20, 30, 40 },
+            { 40, 40, 10, 10, 10, 10, 10, 40, 40 },
         };
 
-        WorldMap worldMap = new WorldMap("Staggered", map);
+        WorldMap worldMap = new WorldMap("Central Spike", map);
 
         return worldMap;
     }
@@ -110,8 +154,8 @@ public class WorldGenerator : MonoBehaviour
         {
             {40, 10, 10, 10, 10, 10, 10, 40, 10 },
             {10, 10, 10, 10, 30, 10, 10, 10, 10 },
-            {10, 30, 12, 10, 10, 10, 32, 10, 10 },
-            {10, 40, 14, 30, 10, 10, 30, 10, 10 },
+            {10, 30, 12, 10, 30, 10, 32, 10, 10 },
+            {10, 40, 14, 10, 30, 10, 30, 10, 10 },
             {10, 50, 16, 10, 10, 10, 28, 10, 10 },
             {10, 60, 18, 10, 10, 10, 26, 10, 10 },
             {10, 10, 10, 10, 10, 10, 10, 10, 10 },
@@ -119,7 +163,7 @@ public class WorldGenerator : MonoBehaviour
             {40, 10, 18, 20, 22, 24, 26, 40, 10 },
         };
 
-        WorldMap worldMap = new WorldMap("Pillars", map);
+        WorldMap worldMap = new WorldMap("Stairs", map);
 
         return worldMap;
     }
@@ -128,18 +172,18 @@ public class WorldGenerator : MonoBehaviour
     {
         float[,] map = new float[worldSize, worldSize]
             {
-            {10, 10, 10, 10, 10, 10, 10, 10, 10 },
-            {10, 10, 30, 10, 10, 10,310, 10, 10 },
-            {10, 30, 10, 30, 10, 30, 10, 30, 10 },
-            {10, 30, 10, 10, 30, 10, 10, 30, 10 },
-            {10, 30, 10, 10, 10, 10, 10, 30, 10 },
-            {10, 10, 30, 10, 50, 10, 30, 10, 10 },
-            {40, 10, 30, 10, 10, 10, 30, 10, 40 },
-            {10, 10, 10, 30, 10, 30, 10, 10, 10 },
-            {10, 20, 10, 10, 30, 10, 10, 20, 10 },
+            {60, 60, 60, 60, 60, 60, 60, 60, 60 },
+            {60, 50, 40, 30, 20, 10, 10, 10, 60 },
+            {60, 10, 10, 10, 10, 10, 10, 10, 60 },
+            {60, 10, 10, 10, 10, 20, 10, 10, 60 },
+            {60, 70, 10, 10, 10, 10, 10, 10, 60 },
+            {60, 70, 10, 20, 10, 10, 20, 10, 60 },
+            {60, 10, 10, 10, 10, 10, 10, 10, 60 },
+            {60, 10, 10, 10, 20, 30, 40, 50, 60 },
+            {60, 60, 60, 60, 60, 60, 60, 60, 60 },
         };
 
-        WorldMap worldMap = new WorldMap("Pillars", map);
+        WorldMap worldMap = new WorldMap("Big Stairs", map);
 
         return worldMap;
     }

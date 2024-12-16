@@ -4,7 +4,7 @@ public class WorldBlock : MonoBehaviour
 {
     private bool dormant = true;
     private float height = 5.0f;
-    private float transformationSpeed = 6.0f;
+    private float transformationSpeed = 12.0f;
     private float errorMargin = 0.1f;
 
     private void Update()

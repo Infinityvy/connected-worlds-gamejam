@@ -8,13 +8,22 @@ public class DimensionBound : MonoBehaviour
     private Dimension boundDimension;
 
     [SerializeField]
+    private ObjectType type;
+
+    [SerializeField]
     private MeshRenderer meshRenderer;
+
+    [SerializeField]
+    private int dimMatIndex;
+    private Material dimMat;
 
     [SerializeField]
     private Material wrongDimMat;
 
     private Material[] materials;
     private Material[] materialsWrongDim;
+
+    private bool started = false;
 
     private void Awake()
     {
@@ -25,7 +34,8 @@ public class DimensionBound : MonoBehaviour
     {
         Color dimCol = DimensionChanger.GetDimensionColor(boundDimension);
 
-        materials[0].color = dimCol;
+        dimMat = materials[dimMatIndex];
+        dimMat.color = dimCol;
 
         materialsWrongDim = new Material[materials.Length];
 
@@ -34,6 +44,10 @@ public class DimensionBound : MonoBehaviour
         DimensionChanger.Instance.RegisterDimensionBound(this);
 
         NotifyJump(DimensionChanger.Instance.currentDimension);
+
+        SetLayer();
+
+        started = true;
     }
 
     private void OnDestroy()
@@ -57,6 +71,20 @@ public class DimensionBound : MonoBehaviour
     {
         boundDimension = dimension;
 
-        NotifyJump(DimensionChanger.Instance.currentDimension);
+        SetLayer();
+
+        if(started) NotifyJump(DimensionChanger.Instance.currentDimension);
+    }
+
+    public Dimension GetBoundDimension()
+    {
+        return boundDimension;
+    }
+
+    private void SetLayer()
+    {
+        if (type == ObjectType.None) return;
+
+        gameObject.layer = LayerMask.NameToLayer(type.ToString() + boundDimension.ToString());
     }
 }

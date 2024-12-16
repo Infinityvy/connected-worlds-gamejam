@@ -3,21 +3,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class DimensionChanger : MonoBehaviour
 {
     public static DimensionChanger Instance;
+
+    private PlayerEntity playerEntity;
 
     public Dimension currentDimension {  get; private set; } = Dimension.Blue;
 
     private PlayerInputActions playerInput;
 
     private InputAction jumpDimensionAction;
-    private float jumpDimensionCooldown = 0.5f;
+    private float jumpDimensionCooldown = 0.8f;
     private float timeWhenLastJumpedDimension = 0f;
 
     private List<DimensionBound> dimensionBounds;
     private List<Material> dimensionIndicators;
+
+    [SerializeField]
+    private GameObject[] playerObjects;
+
+    [SerializeField]
+    private Volume globalVolume;
+    private ChromaticAberration chromatic;
+    private LensDistortion lensDist;
+
+    private bool animateJump = false;
+    private float chromaticIntensity = 0f;
+    private float jumpSpeed = 6.0f;
+
+    [SerializeField]
+    private AudioSource audioSource;
 
 
     private void Awake()
@@ -32,26 +51,73 @@ public class DimensionChanger : MonoBehaviour
         dimensionIndicators = new List<Material>();
     }
 
-    public void JumpDimension(InputAction.CallbackContext context)
+    private void Start()
     {
-        if(Time.time - timeWhenLastJumpedDimension < jumpDimensionCooldown)
+        playerEntity = PlayerEntity.Instance;
+
+        globalVolume.profile.TryGet(out chromatic);
+        globalVolume.profile.TryGet(out lensDist);
+
+        JumpDimension();
+    }
+
+    private void Update()
+    {
+        if(animateJump)
+        {
+            chromaticIntensity = chromaticIntensity + jumpSpeed * Time.deltaTime;
+            if (chromaticIntensity >= 1)
+            {
+                animateJump = false;
+                chromaticIntensity = 1;
+                JumpDimension();
+            }
+
+            chromatic.intensity.Override(chromaticIntensity);
+            lensDist.intensity.Override(-chromaticIntensity * 0.6f);
+        }
+        else if(chromaticIntensity > 0f)
+        {
+            chromaticIntensity = Mathf.Clamp01(chromaticIntensity - jumpSpeed * Time.deltaTime);
+            chromatic.intensity.Override(chromaticIntensity);
+            lensDist.intensity.Override(-chromaticIntensity * 0.6f);
+        }
+    }
+
+    public void InitiateDimensionJump(InputAction.CallbackContext context)
+    {
+        if (playerEntity.isFrozen) return;
+
+        if (Time.time - timeWhenLastJumpedDimension < jumpDimensionCooldown)
         {
             return;
         }
 
+        animateJump = true;
+        audioSource.PlaySound("snap-echo", 0.5f);
+    }
+
+    private void JumpDimension()
+    {
         timeWhenLastJumpedDimension = Time.time;
 
         if(currentDimension == Dimension.Blue)
         {
             currentDimension = Dimension.Red;
 
-            gameObject.layer = LayerMask.NameToLayer("PlayerRed");
+            foreach(GameObject obj in playerObjects)
+            {
+                obj.layer = LayerMask.NameToLayer("PlayerRed");
+            }
         }
         else
         {
             currentDimension = Dimension.Blue;
 
-            gameObject.layer = LayerMask.NameToLayer("PlayerBlue");
+            foreach (GameObject obj in playerObjects)
+            {
+                obj.layer = LayerMask.NameToLayer("PlayerBlue");
+            }
         }
 
         foreach (DimensionBound dimBound in dimensionBounds)
@@ -90,7 +156,7 @@ public class DimensionChanger : MonoBehaviour
     {
         jumpDimensionAction = playerInput.Player.JumpDimension;
         jumpDimensionAction.Enable();
-        jumpDimensionAction.performed += JumpDimension;
+        jumpDimensionAction.performed += InitiateDimensionJump;
     }
 
     private void OnDisable()

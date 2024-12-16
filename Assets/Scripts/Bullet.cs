@@ -20,7 +20,7 @@ public class Bullet : MonoBehaviour
     private bool initiated = false;
     private bool destroyed = false;
 
-    public void Init(Dimension dimension, LayerMask layerMask, float damage = 1.0f, float speed = 10.0f, float lifetime = 5.0f)
+    public void Init(Dimension dimension, LayerMask layerMask, float damage = 1.0f, float speed = 10.0f, float lifetime = 5.0f, float scale = 1.0f)
     {
         lastPosition = transform.position;
 
@@ -29,6 +29,7 @@ public class Bullet : MonoBehaviour
         this.damage = damage;
         this.speed = speed;
         this.lifetime = lifetime;
+        transform.localScale = new Vector3(scale, scale, scale);
 
 
         birthday = Time.time;

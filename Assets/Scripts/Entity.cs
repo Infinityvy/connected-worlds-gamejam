@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
 {
-    protected float maxHealth = 100.0f;
+    public float maxHealth;
     protected float currentHealth;
 
 

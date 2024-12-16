@@ -5,6 +5,8 @@ public class PlayerCamera : MonoBehaviour
 {
     public static PlayerCamera Instance;
 
+    private PlayerEntity playerEntity;
+
     public Camera cam {  get; private set; }
     private PlayerInputActions playerInput;
 
@@ -27,10 +29,13 @@ public class PlayerCamera : MonoBehaviour
 
     void Start()
     {
+        playerEntity = PlayerEntity.Instance;
     }
 
     void Update()
     {
+        if(playerEntity.isFrozen) return;
+
         RotateCamera();
     }
 
@@ -60,7 +65,6 @@ public class PlayerCamera : MonoBehaviour
     {
         return Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
     }
-
     private void OnEnable()
     {
         lookAction = playerInput.Player.Look;

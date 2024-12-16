@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class GameSession : MonoBehaviour
 {
+    public Material mat;
+
     public static GameSession Instance { get; private set; }
 
     public PlayerInputActions playerInput {  get; private set; }
@@ -16,12 +18,15 @@ public class GameSession : MonoBehaviour
         Instance = this;
 
         playerInput = new PlayerInputActions();
+
+        Time.timeScale = 1.0f;
     }
 
     void Start()
     {
         Controls.Init();
         Cursor.lockState = CursorLockMode.Locked;
+        mat.color = Color.white;
     }
 
     private void OnEnable()
@@ -31,7 +36,7 @@ public class GameSession : MonoBehaviour
         resetAction.performed += ResetSession;
     }
 
-    private void ResetSession(InputAction.CallbackContext context)
+    public void ResetSession(InputAction.CallbackContext context)
     {
         SceneManager.LoadScene("Main");
     }
