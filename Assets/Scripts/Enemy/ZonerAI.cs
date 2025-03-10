@@ -67,7 +67,7 @@ public class ZonerAI : MonoBehaviour
             return;
         }
 
-        if (InRangeAndVisionOfPlayer())
+        if (InRangeAndVisionOfPlayer() && dimBound.GetBoundDimension() == DimensionChanger.Instance.currentDimension)
         {
             if (state != AIState.Attacking)
             {

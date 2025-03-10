@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class WorldGenerator : MonoBehaviour
 {
@@ -23,6 +24,8 @@ public class WorldGenerator : MonoBehaviour
     public WorldMap currentMap { get; private set; }
 
     private List<WorldMap> worldMapList;
+
+    private bool isNavMeshBuilt = false;
 
     void Start()
     {
@@ -95,10 +98,45 @@ public class WorldGenerator : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
-        navMeshSurface.RemoveData();
-        navMeshSurface.BuildNavMesh();
+
+        StartCoroutine(nameof(RebuildNavMeshAsync));
+        
+        while(!isNavMeshBuilt)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
 
         enemyDirector.SpawnWave();
+    }
+
+    private IEnumerator RebuildNavMeshAsync()
+    {
+        isNavMeshBuilt = false;
+
+        List<NavMeshBuildSource> sources = new List<NavMeshBuildSource>();
+
+        NavMeshBuilder.CollectSources(transform, navMeshSurface.layerMask, navMeshSurface.useGeometry,
+                                      navMeshSurface.defaultArea, new List<NavMeshBuildMarkup>(), sources);
+
+
+        if (navMeshSurface.navMeshData == null)
+        {
+            //navMeshSurface.navMeshData = NavMeshBuilder.BuildNavMeshData(navMeshSurface.GetBuildSettings(), sources, surfaceBounds, navMeshSurface.center, Quaternion.identity);
+            navMeshSurface.BuildNavMesh();
+            navMeshSurface.navMeshData.name = "CustomNavMeshData";
+            //navMeshSurface.navMeshData = new NavMeshData();
+        }
+
+        
+
+        Bounds surfaceBounds = new Bounds(navMeshSurface.center, new Vector3(float.MaxValue, float.MaxValue, float.MaxValue));
+
+
+        AsyncOperation operation = NavMeshBuilder.UpdateNavMeshDataAsync(navMeshSurface.navMeshData, navMeshSurface.GetBuildSettings(), sources, surfaceBounds);
+
+        yield return operation;
+
+        isNavMeshBuilt = true;
     }
 
     public void LoadNextMap()

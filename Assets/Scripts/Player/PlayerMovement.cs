@@ -20,8 +20,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerInputActions playerInput;
 
     private InputAction moveAction;
-    private float acceleration = 1000f;
-    private float deceleration = 400f;
+    private float acceleration = 10f;
     private float maxSpeed = 12.0f;
 
     private InputAction jumpAction;
@@ -90,21 +89,9 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 direction = moveAction.ReadValue<Vector2>().ConvertTo3DMovement();
 
-        Vector3 forceVector = PlayerCamera.Instance.GetHorizontalRotation() * direction.normalized * Time.deltaTime;
+        Vector3 desiredVelocity = PlayerCamera.Instance.GetHorizontalRotation() * direction * maxSpeed + playerRigid.linearVelocity.y * Vector3.up;
 
-        Vector3 horizontalVelocity = new Vector3(playerRigid.linearVelocity.x, 0, playerRigid.linearVelocity.z);
-
-        if (forceVector != Vector3.zero
-            && horizontalVelocity.magnitude < maxSpeed)
-        {
-            playerRigid.AddForce(acceleration * forceVector);
-        }
-        else if ((playerRigid.linearVelocity.x != 0 || playerRigid.linearVelocity.z != 0))
-        {
-            Vector3 reductionVector = deceleration * Time.deltaTime * -horizontalVelocity * (isGrounded ? 1 : 0.5f);
-
-            playerRigid.AddForce(reductionVector);
-        }
+        playerRigid.linearVelocity = Vector3.Lerp(playerRigid.linearVelocity, desiredVelocity, acceleration * Time.deltaTime);
     }
 
     private void Jump(InputAction.CallbackContext context)

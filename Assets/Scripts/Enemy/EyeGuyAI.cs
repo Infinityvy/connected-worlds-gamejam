@@ -12,7 +12,7 @@ public class EyeGuyAI : MonoBehaviour
     private float pathFindingInterval = 0.2f;
     private float timeWhenLastPathFinded = 0;
 
-    private float preferredDistanceToPlayer = 20.0f;
+    private float preferredDistanceToPlayer = 15.0f;
 
     private Transform playerTransform;
 
@@ -53,7 +53,7 @@ public class EyeGuyAI : MonoBehaviour
 
         transform.LookAt(playerTransform);
 
-        if (InRangeAndVisionOfPlayer())
+        if (InRangeAndVisionOfPlayer() && dimBound.GetBoundDimension() == DimensionChanger.Instance.currentDimension)
         {
             if (state != AIState.Attacking)
             {
